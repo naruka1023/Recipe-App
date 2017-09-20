@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
-var Loc = mongoose.model('Location');
+var Loc = mongoose.model('Recipe');
 
 var sendJSONresponse = function(res, status, content) {
+  
   res.status(status);
   res.json(content);
 };
