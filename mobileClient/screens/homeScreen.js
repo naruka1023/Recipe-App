@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
   TextInput,
+  FlatList,
   Image,
   TouchableHighlight,
   TouchableNativeFeedback,
@@ -21,6 +22,8 @@ import {
 import { Picker } from 'react-native-picker-dropdown';
 
 var Accordion = require('react-native-accordion');
+
+var tweenFunctions = require('tween-functions');
 
 export default class HomeScreen extends React.Component {
     constructor(props){
@@ -65,42 +68,62 @@ export default class HomeScreen extends React.Component {
       }
       
       renderRow(section) {
+        
         var header = (
           <View style={{
             flex:1,
             flexDirection: 'row', 
             justifyContent: 'space-between',
             alignItems: 'center',
-            backgroundColor: 'blue',
+            backgroundColor: 'rgb(211,211,211)',
             padding: 10}}>
             <Text>{section.recipeName}</Text>
             <Text>Created by: {section.createdBy}</Text>
           </View>);
-      let ingredientList = section.ingredient.forEach((ing) => {
-        return(
-          <View>
-            <Text>{ing.ingredientName}</Text> 
-          </View>
-        )
-      });
+
+      var dataBlob = [];
+
+      section.ingredient.forEach(function(ing){
+        dataBlob.push({
+          name:  ing.ingredientName,
+          amount: ing.amount,
+          unitOfMeasurement: ing.unitOfMeasurement
+        });
+      })
+      
+      var dataSourceIngredient = new ListView.DataSource({
+        rowHasChanged : (row1, row2) => row1 !== row2,
+      })
+
+      dataSourceIngredient = dataSourceIngredient.cloneWithRows(dataBlob);
+
+
       var content = (
         <View style={{
+          flex:1}}>
+          <ListView
+          dataSource={dataSourceIngredient}
+          renderRow={(entities)=> 
+        <View style={{
           flex:1,
-          flexDirection: 'column', 
+          flexDirection: 'row', 
           justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          backgroundColor: 'red',
-          paddingHorizontal: 5}}>
-          <Text>-something</Text>
-          <Text>-something</Text>
-          <Text>-something</Text>
+          alignItems: 'center',
+          backgroundColor: 'rgb(192,192,192)',
+          padding: 10}}>
+          <Text>{entities.name}</Text>
+          <Text> x {entities.amount}</Text>
+        </View>
+      }
+        />
         </View>);
+
       return (
         <Accordion 
           header={header}
           content={content}
           underlayColor='rgba(0,0,0,0.1)'
-          easing='easeInSine'
+          easing= 'linear'
         />);
     }
 

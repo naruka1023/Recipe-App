@@ -1,8 +1,9 @@
 package com.mobileclient;
 
 import com.facebook.react.ReactActivity;
+import net.zubricky.AndroidKeyboardAdjust.AndroidKeyboardAdjustPackage;
+import net.zubricky.AndroidKeyboardAdjust.AndroidKeyboardAdjustPackage;
 import com.beefe.picker.PickerViewPackage;
-
 public class MainActivity extends ReactActivity {
 
     /**

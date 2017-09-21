@@ -30,7 +30,7 @@ export default class IngredientEntity extends Component {
       this.ingredientsBank.push({
         key: this.props.index,
         ingredientName: '',
-        amount: 0,
+        amount: "0",
         unitOfMeasurement: 'kg'
       });
       this.props.newScreen.setState({
@@ -85,7 +85,7 @@ export default class IngredientEntity extends Component {
               <Text style={{fontSize:15}}>Ingredient: </Text>
               <TextInput 
                   style={{
-                      height: 40, 
+                      height: 35, 
                       width:100, 
                       borderColor: 'gray', 
                       borderWidth: 1
@@ -96,7 +96,7 @@ export default class IngredientEntity extends Component {
               <Text style={{fontSize:15}}>  Amount: </Text>
               <TextInput 
                   style={{
-                      height: 40, 
+                      height: 35, 
                       width:50, 
                       borderColor: 'gray', 
                       borderWidth: 1
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
       flexDirection: 'column'
     },
     ingredientContainer: {
-      height:130,
+      height:120,
       flexDirection: 'column',
       justifyContent: 'space-between',
       marginVertical:10,

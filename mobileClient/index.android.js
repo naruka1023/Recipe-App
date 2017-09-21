@@ -13,8 +13,6 @@ import {
   StackNavigator,
 } from 'react-navigation';
 
-import { Picker } from 'react-native-picker-dropdown';
-
 import HomeScreen from './screens/homeScreen'
 
 import CreateNewScreen from './screens/createNewScreen'

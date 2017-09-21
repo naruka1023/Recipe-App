@@ -5,11 +5,14 @@ import {
   Animated,
   Text,
   TextInput,
+  KeyboardAvoidingView,
   Alert,
   View,
   ScrollView,
   Button
 } from 'react-native';
+
+import AndroidKeyboardAdjust from 'react-native-android-keyboard-adjust';
 
 import { Picker } from 'react-native-picker-dropdown';
 
@@ -28,6 +31,7 @@ import {
       this.state = {
         iterator: [],
         recipeName: '',
+        createdBy:'',
         price: '0',
         ingredients: []
       };
@@ -42,20 +46,31 @@ import {
     };
     
     validateInput(){
-        if(this.state.recipeName != '' && this.state.price != 0){
+        var postFlag = true,
+            i = 0,
+            a = 1;
+        if(this.state.recipeName != '' && this.state.price != 0 && this.state.createdBy != ''){
             if(this.state.ingredients.length != 0){
                 if(this.isNumber(this.state.price)){
-                    this.state.ingredients.forEach((ingredient) =>{
-                        if(ingredient.name != '' && ingredient.amount != 0){
+                    this.state.ingredients.some((ingredient) =>{
+                        if(ingredient.ingredientName != '' && ingredient.amount != 0){
                             if(this.isNumber(ingredient.amount)){
-                                this.postRecipe();
+                                a += i;
                             }else{
-                                Alert.alert("Error","Amount is not a number");
+                                Alert.alert("Error","One of the amount is not a number");
+                                postFlag = false;
+
+                                return true;
                             }
                         }else{
                             Alert.alert("Error","Please fill in everything");
+                            postFlag = false;
+                            return true;
                         }
                     });
+                    if(postFlag){
+                        this.postRecipe();
+                    }
                 }else{
                     Alert.alert("Error","Price is not a number");
                 }
@@ -63,7 +78,6 @@ import {
                 Alert.alert("Error","At least 1 ingredient is required");
             }
         }else{
-            
             Alert.alert("Error","Please include the recipe \nname and/or price");
         }
     }
@@ -76,6 +90,7 @@ import {
     }
     componentDidMount(){
         this.addIngredientButton();
+        
     }
     
     postRecipe(){
@@ -88,7 +103,7 @@ import {
             body: JSON.stringify({
                 recipeName: this.state.recipeName,
                 price: this.state.price,
-                createdBy: "anonymous",
+                createdBy: this.state.createdBy,
                 ingredient: this.state.ingredients
             })
         }).then(() =>{
@@ -104,8 +119,21 @@ import {
         })
         
         return (
-            <View style = {styles.container}>
-          <View style = {styles.headerContainer}>
+        <View style = {styles.container}>
+            <View style = {styles.headerContainerFirstRow}>
+            <Text style={{fontSize:15}}>Created by: </Text>
+              <TextInput 
+                  style={{
+                      height: 40, 
+                      width:250, 
+                      borderColor: 'gray', 
+                      borderWidth: 1
+                  }}
+                  autoCapitalize= "words"
+                  onChangeText={(text3) => this.setState({createdBy : text3})}
+                  value={this.state.createdBy}/>
+          </View>
+          <View style = {styles.headerContainerSecondRow}>
             <Text style={{fontSize:15}}>Recipe name: </Text>
               <TextInput 
                   style={{
@@ -180,14 +208,22 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       backgroundColor: 'rgba(128,128,128, 0.2)'
     },
-    headerContainer: {
+    headerContainerSecondRow: {
       flex: 1,
       flexDirection: "row",
       justifyContent: 'space-around',
-      alignItems: 'center',
-      padding:15,
       borderBottomColor: 'grey',
-      borderBottomWidth:3
+      borderBottomWidth:3,
+      alignItems: 'center',
+      padding:10
+    },
+    headerContainerFirstRow: {
+      flex: 1,
+      flexDirection: "row",
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      padding: 10,
+      paddingBottom : 0
     },
     footerContainer: {
       flex:1,
